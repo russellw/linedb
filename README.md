@@ -20,6 +20,7 @@ If a line is non-blank, but does not contain a `:`, it should be treated as a co
 
 Example input:
 
+```
 title: The Hitchhiker's Guide to the Galaxy
 author: Douglas Adams
 published: 1979
@@ -28,6 +29,7 @@ The first of a trilogy in five parts
 Title: The Colour of Magic
 author:Terry Pratchett
 published: 1983
+```
 
 A: Below is a C++ program that converts from LineDB format to CSV format. This program reads a LineDB file provided as a command line argument and prints the CSV output to standard output.
 

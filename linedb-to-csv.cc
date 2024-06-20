@@ -5,7 +5,9 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <set>
 
+// Function to case-fold the first character of a string
 std::string caseFold(const std::string& str) {
     std::string result = str;
     if (!result.empty()) {
@@ -14,6 +16,7 @@ std::string caseFold(const std::string& str) {
     return result;
 }
 
+// Function to trim leading and trailing spaces
 std::string trim(const std::string& str) {
     size_t first = str.find_first_not_of(' ');
     if (first == std::string::npos) return "";
@@ -21,9 +24,11 @@ std::string trim(const std::string& str) {
     return str.substr(first, last - first + 1);
 }
 
-void parseLineDB(std::ifstream& file, std::vector<std::map<std::string, std::string>>& records) {
+// Function to parse LineDB format
+void parseLineDB(std::ifstream& file, std::vector<std::map<std::string, std::string>>& records, std::vector<std::string>& headers) {
     std::string line;
     std::map<std::string, std::string> record;
+    std::set<std::string> headerSet;
 
     while (std::getline(file, line)) {
         if (line.empty()) {
@@ -37,6 +42,10 @@ void parseLineDB(std::ifstream& file, std::vector<std::map<std::string, std::str
                 std::string fieldName = caseFold(trim(line.substr(0, colonPos)));
                 std::string fieldValue = caseFold(trim(line.substr(colonPos + 1)));
                 record[fieldName] = fieldValue;
+                if (headerSet.find(fieldName) == headerSet.end()) {
+                    headers.push_back(fieldName);
+                    headerSet.insert(fieldName);
+                }
             }
         }
     }
@@ -46,24 +55,18 @@ void parseLineDB(std::ifstream& file, std::vector<std::map<std::string, std::str
     }
 }
 
-void printCSV(const std::vector<std::map<std::string, std::string>>& records) {
+// Function to print records in CSV format
+void printCSV(const std::vector<std::map<std::string, std::string>>& records, const std::vector<std::string>& headers) {
     if (records.empty()) return;
 
-    std::vector<std::string> headers;
-    for (const auto& record : records) {
-        for (const auto& field : record) {
-            if (std::find(headers.begin(), headers.end(), field.first) == headers.end()) {
-                headers.push_back(field.first);
-            }
-        }
-    }
-
+    // Print headers
     for (size_t i = 0; i < headers.size(); ++i) {
         std::cout << headers[i];
         if (i < headers.size() - 1) std::cout << ",";
     }
     std::cout << std::endl;
 
+    // Print records
     for (const auto& record : records) {
         for (size_t i = 0; i < headers.size(); ++i) {
             if (record.find(headers[i]) != record.end()) {
@@ -88,10 +91,11 @@ int main(int argc, char* argv[]) {
     }
 
     std::vector<std::map<std::string, std::string>> records;
-    parseLineDB(inputFile, records);
+    std::vector<std::string> headers;
+    parseLineDB(inputFile, records, headers);
     inputFile.close();
 
-    printCSV(records);
+    printCSV(records, headers);
 
     return 0;
 }

@@ -6,13 +6,21 @@
 #include <map>
 #include <algorithm>
 #include <set>
+#include <cctype>
 
-// Function to case-fold the first character of a string
 std::string caseFold(const std::string& str) {
     std::string result = str;
-    if (!result.empty()) {
-        result[0] = toupper(result[0]);
+    bool capitalizeNext = true;  // Start by capitalizing the first character
+
+    for (size_t i = 0; i < result.size(); ++i) {
+        if (isspace(result[i]) || ispunct(result[i])) {
+            capitalizeNext = true;
+        } else if (capitalizeNext) {
+            result[i] = toupper(result[i]);
+            capitalizeNext = false;
+        }
     }
+
     return result;
 }
 

@@ -13,7 +13,7 @@ std::string caseFold(const std::string& str) {
     bool capitalizeNext = true;  // Start by capitalizing the first character
 
     for (size_t i = 0; i < result.size(); ++i) {
-        if (isspace(result[i]) || ispunct(result[i])) {
+        if (isspace(result[i])) {
             capitalizeNext = true;
         } else if (capitalizeNext) {
             result[i] = toupper(result[i]);

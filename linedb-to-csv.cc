@@ -8,6 +8,28 @@
 #include <set>
 #include <cctype>
 
+// Check whether the string at the specified offset contains the substring "or "
+bool isOr(const std::string& str, size_t i) {
+// Check if there is enough room in the string for "or "
+    if (i + 3 > str.size()) {
+        return false;
+    }
+
+    // Check if the substring "or " is found at the specified offset
+    return str.substr(i, 3) == "or ";
+}
+
+// Check whether the string at the specified offset contains the substring "and "
+bool isAnd(const std::string& str, size_t i) {
+// Check if there is enough room in the string for "and "
+    if (i + 4 > str.size()) {
+        return false;
+    }
+
+    // Check if the substring "and " is found at the specified offset
+    return str.substr(i, 4) == "and ";
+}
+
 std::string caseFold(const std::string& str) {
     std::string result = str;
     bool capitalizeNext = true;  // Start by capitalizing the first character
@@ -16,7 +38,8 @@ std::string caseFold(const std::string& str) {
         if (isspace(result[i])) {
             capitalizeNext = true;
         } else if (capitalizeNext) {
-            result[i] = toupper(result[i]);
+            if(!isOr(str,i)&&!isAnd(str,i))
+                result[i] = toupper(result[i]);
             capitalizeNext = false;
         }
     }

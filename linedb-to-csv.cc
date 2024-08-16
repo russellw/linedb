@@ -71,7 +71,7 @@ void parseLineDB(std::ifstream& file, std::vector<std::map<std::string, std::str
             size_t colonPos = line.find(':');
             if (colonPos != std::string::npos) {
                 std::string fieldName = caseFold(trim(line.substr(0, colonPos)));
-                std::string fieldValue = caseFold(trim(line.substr(colonPos + 1)));
+                std::string fieldValue = trim(line.substr(colonPos + 1));
                 record[fieldName] = fieldValue;
                 if (headerSet.find(fieldName) == headerSet.end()) {
                     headers.push_back(fieldName);
